@@ -1,6 +1,6 @@
 APPLES = ([
     'I', 'me', 'myself',
-    'He', 'him', 'himself',
+    'he', 'him', 'himself',
     'I like', 'apples', 'I like apples',
     'he likes', 'apples', 'he likes apples',
 ], 3)

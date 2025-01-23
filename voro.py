@@ -1,8 +1,6 @@
 import cv2
 import numpy as np
-import voyageai
 from PIL import Image, ImageDraw, ImageFont
-from sentence_transformers import SentenceTransformer
 
 import captions
 
@@ -13,7 +11,8 @@ import captions
         np.save(f'W_{dim}', W)
 """
 
-MODEL, EMBED_DIM = 'voyage-lite-02-instruct', 1024
+MODEL, EMBED_DIM = 'spacy', 300
+# MODEL, EMBED_DIM = 'voyage-lite-02-instruct', 1024
 # MODEL, EMBED_DIM = 'voyage-3-lite', 512
 # MODEL, EMBED_DIM = 'BAAI/bge-large-en-v1.5', 1024
 # MODEL, EMBED_DIM = 'Alibaba-NLP/gte-large-en-v1.5', 1024
@@ -21,8 +20,8 @@ MODEL, EMBED_DIM = 'voyage-lite-02-instruct', 1024
 # MODEL, EMBED_DIM = 'llmrails/ember-v1', 1024
 # MODEL, EMBED_DIM = 'WhereIsAI/UAE-Large-V1', 1024
 N = 16
-MIN = -3.8
-MAX = 2.7
+MIN = -3
+MAX = 3
 
 def to_lab(colors):
     # Normalize the first channel to [0, 100]
@@ -136,10 +135,21 @@ def create_image_grid_with_captions(rgb_images, captions, cols=4,
 if __name__ == '__main__':
     captions, cols = captions.APPLES
 
-    if MODEL.startswith('voyage'):
+    if MODEL.startswith('spacy'):
+        import spacy
+        if 'nlp' not in locals():
+            nlp = spacy.load('en_core_web_lg')
+        docs = [nlp(caption) for caption in captions]
+        emb = []
+        for doc in docs:
+            emb.append(sum([t.vector / t.vector_norm for t in doc]) / len(doc))
+        emb = np.array(emb, dtype=np.float32)
+    elif MODEL.startswith('voyage'):
+        import voyageai
         vo = voyageai.Client()
         emb = np.array(vo.embed(captions, model=MODEL).embeddings, dtype=np.float32)
     else:
+        from sentence_transformers import SentenceTransformer
         if 'model' not in locals():
             model = SentenceTransformer(MODEL, trust_remote_code=True)
         emb = model.encode(captions, normalize_embeddings=True)
