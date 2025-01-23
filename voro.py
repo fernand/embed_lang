@@ -6,7 +6,7 @@ import captions
 
 """
     import numpy as np
-    for dim in [512, 768, 1024, 1536]:
+    for dim in [300, 512, 768, 1024, 1536]:
         W = np.random.randn(dim, 5 * 16).astype(np.float32)
         np.save(f'W_{dim}', W)
 """
