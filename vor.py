@@ -3,7 +3,7 @@ import numpy as np
 import voyageai
 from PIL import Image, ImageDraw, ImageFont
 
-import api_config
+import captions
 
 """
     W = np.random.randn(1024, 5 * 16).astype(np.float32)
@@ -11,7 +11,7 @@ import api_config
 
 MODEL = 'voyage-lite-02-instruct'
 N = 16
-MIN = -3.5
+MIN = -3.8
 MAX = 2.5
 
 def to_lab(colors):
@@ -124,18 +124,9 @@ def create_image_grid_with_captions(rgb_images, captions, cols=4,
     return out_img
 
 if __name__ == '__main__':
-    captions = [
-        'animal',
-        'animals',
-        'bicycle',
-        'bicycles',
-        'apple',
-        'apples',
-        'hand',
-        'hands',
-    ]
+    captions, cols = captions.PLURALS_AND_MANY
 
-    vo = voyageai.Client(api_key=api_config.VOYAGE_API_KEY)
+    vo = voyageai.Client()
     emb = np.array(vo.embed(captions, model=MODEL).embeddings, dtype=np.float32)
 
     W = np.load('W_1024.npy').astype(np.float32)
@@ -156,5 +147,5 @@ if __name__ == '__main__':
         rgb_image = (rgb_image * 255).astype(np.uint8)
         rgb_diagrams.append(rgb_image)
 
-    output = create_image_grid_with_captions(rgb_diagrams, captions, cols=2)
+    output = create_image_grid_with_captions(rgb_diagrams, captions, cols)
     output.save('diagrams.png')
