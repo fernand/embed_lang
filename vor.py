@@ -6,7 +6,7 @@ from PIL import Image, ImageDraw, ImageFont
 import api_config
 
 """
-    W = np.random.randn(1024, 5 * 16)
+    W = np.random.randn(1024, 5 * 16).astype(np.float32)
 """
 
 MODEL = 'voyage-lite-02-instruct'
