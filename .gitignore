@@ -1,0 +1,5 @@
+﻿__pycache__
+venv
+*.png
+api_config.py
+*.npy
