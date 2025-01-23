@@ -74,7 +74,6 @@ def create_image_grid_with_captions(rgb_images, captions, cols=4,
     """
     assert len(rgb_images) == len(captions), "images and captions must match in length"
 
-    # Convert np arrays to PIL Images if needed, and measure dimension
     pil_images = []
     for im in rgb_images:
         if isinstance(im, np.ndarray):
@@ -84,31 +83,24 @@ def create_image_grid_with_captions(rgb_images, captions, cols=4,
 
     w, h = pil_images[0].size
 
-    # Choose a font
     if font_path is not None:
         font = ImageFont.truetype(font_path, font_size)
     else:
         font = ImageFont.load_default()
 
-    # We need to measure text height to offset images from captions
     dummy_draw = ImageDraw.Draw(pil_images[0])
     text_heights = []
     for cap in captions:
-        # you can measure the bounding box if you want to be more precise
         bbox = dummy_draw.textbbox((0,0), cap, font=font)
         text_height = bbox[3] - bbox[1]
         text_heights.append(text_height)
-    # Or just pick a single text height to use for all if you prefer
     max_text_height = max(text_heights)
 
-    # Calculate grid size
     rows = (len(pil_images) + cols - 1) // cols
 
-    # Overall canvas size
     out_w = padding + cols*(w + padding)
     out_h = padding + rows*(h + max_text_height + padding)
 
-    # Create new white canvas
     out_img = Image.new("RGB", (out_w, out_h), color=(255, 255, 255))
     draw = ImageDraw.Draw(out_img)
 
