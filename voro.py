@@ -22,7 +22,7 @@ MODEL, EMBED_DIM = 'voyage-lite-02-instruct', 1024
 # MODEL, EMBED_DIM = 'WhereIsAI/UAE-Large-V1', 1024
 N = 16
 MIN = -3.8
-MAX = 2.5
+MAX = 2.7
 
 def to_lab(colors):
     # Normalize the first channel to [0, 100]
@@ -134,7 +134,13 @@ def create_image_grid_with_captions(rgb_images, captions, cols=4,
     return out_img
 
 if __name__ == '__main__':
-    captions, cols = captions.PLURALS_AND_MANY
+    # captions, cols = captions.PLURALS_AND_MANY
+    captions, cols = ([
+        'I', 'me', 'myself',
+        'He', 'him', 'himself',
+        'I like', 'apples', 'I like apples',
+        'he likes', 'apples', 'he likes apples',
+    ], 3)
 
     if MODEL.startswith('voyage'):
         vo = voyageai.Client()
@@ -149,8 +155,7 @@ if __name__ == '__main__':
     points = proj[:, :2*N].reshape(len(emb), N, 2)
     colors = proj[:, 2*N:].reshape(len(emb), N, 3)
 
-    print('Min/Max points', round(np.min(points), 1), round(np.max(points), 1))
-    print('Min/Max colors', round(np.min(colors), 1), round(np.max(colors), 1))
+    print('Min/Max', round(np.min(proj), 1), round(np.max(proj), 1))
     points = normalize_points(points)
     colors = to_lab(colors)
 
