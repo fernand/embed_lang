@@ -11,8 +11,8 @@ import api_config
 
 MODEL = 'voyage-lite-02-instruct'
 N = 16
-MIN = -3
-MAX = 3
+MIN = -3.5
+MAX = 2.5
 
 def to_lab(colors):
     # Normalize the first channel to [0, 100]
@@ -137,8 +137,10 @@ if __name__ == '__main__':
         'animals',
         'bicycle',
         'bicycles',
-        'He likes to ride his bicycle.',
-        'She likes to ride her bicycle.'
+        'apple',
+        'apples',
+        'hand',
+        'hands',
     ]
 
     vo = voyageai.Client(api_key=api_config.VOYAGE_API_KEY)
