@@ -115,17 +115,13 @@ def create_image_grid_with_captions(rgb_images, captions, cols=4,
 
     x = y = padding
     for i, (img, cap) in enumerate(zip(pil_images, captions)):
-        # Paste image
         out_img.paste(img, (x, y))
 
-        # Write caption below the image
         text_x = x
-        text_y = y + h  # just below the image
+        text_y = y + h
         draw.text((text_x, text_y), cap, fill=(0, 0, 0), font=font)
 
-        # Move to next column
         x += w + padding
-        # If we filled this row, reset and move to next row
         if (i + 1) % cols == 0:
             x = padding
             y += (h + max_text_height + padding)
