@@ -6,7 +6,10 @@ from PIL import Image, ImageDraw, ImageFont
 import captions
 
 """
-    W = np.random.randn(1024, 5 * 16).astype(np.float32)
+    import numpy as np
+    dim = 512
+    W = np.random.randn(dim, 5 * 16).astype(np.float32)
+    np.save(f'W_{dim}', W)
 """
 
 MODEL = 'voyage-lite-02-instruct'
@@ -124,12 +127,13 @@ def create_image_grid_with_captions(rgb_images, captions, cols=4,
     return out_img
 
 if __name__ == '__main__':
+    embed_dim = 1024
     captions, cols = captions.PLURALS_AND_MANY
 
     vo = voyageai.Client()
     emb = np.array(vo.embed(captions, model=MODEL).embeddings, dtype=np.float32)
 
-    W = np.load('W_1024.npy').astype(np.float32)
+    W = np.load(f'W_{embed_dim}.npy').astype(np.float32)
     proj = emb @ W
     points = proj[:, :2*N].reshape(len(emb), N, 2)
     colors = proj[:, 2*N:].reshape(len(emb), N, 3)
