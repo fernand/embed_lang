@@ -2,17 +2,23 @@ import cv2
 import numpy as np
 import voyageai
 from PIL import Image, ImageDraw, ImageFont
+from sentence_transformers import SentenceTransformer
 
 import captions
 
 """
     import numpy as np
-    dim = 512
-    W = np.random.randn(dim, 5 * 16).astype(np.float32)
-    np.save(f'W_{dim}', W)
+    for dim in [512, 768, 1024, 1536]:
+        W = np.random.randn(dim, 5 * 16).astype(np.float32)
+        np.save(f'W_{dim}', W)
 """
 
-MODEL = 'voyage-lite-02-instruct'
+MODEL, EMBED_DIM = 'voyage-lite-02-instruct', 1024
+# MODEL, EMBED_DIM = 'BAAI/bge-large-en-v1.5', 1024
+# MODEL, EMBED_DIM = 'Alibaba-NLP/gte-large-en-v1.5', 1024
+# MODEL, EMBED_DIM = 'Alibaba-NLP/gte-base-en-v1.5', 768
+# MODEL, EMBED_DIM = 'llmrails/ember-v1', 1024
+# MODEL, EMBED_DIM = 'WhereIsAI/UAE-Large-V1', 1024
 N = 16
 MIN = -3.8
 MAX = 2.5
@@ -127,13 +133,17 @@ def create_image_grid_with_captions(rgb_images, captions, cols=4,
     return out_img
 
 if __name__ == '__main__':
-    embed_dim = 1024
     captions, cols = captions.PLURALS_AND_MANY
 
-    vo = voyageai.Client()
-    emb = np.array(vo.embed(captions, model=MODEL).embeddings, dtype=np.float32)
+    if MODEL.startswith('voyage'):
+        vo = voyageai.Client()
+        emb = np.array(vo.embed(captions, model=MODEL).embeddings, dtype=np.float32)
+    else:
+        if 'model' not in locals():
+            model = SentenceTransformer(MODEL, trust_remote_code=True)
+        emb = model.encode(captions, normalize_embeddings=True)
 
-    W = np.load(f'W_{embed_dim}.npy').astype(np.float32)
+    W = np.load(f'W_{EMBED_DIM}.npy').astype(np.float32)
     proj = emb @ W
     points = proj[:, :2*N].reshape(len(emb), N, 2)
     colors = proj[:, 2*N:].reshape(len(emb), N, 3)
