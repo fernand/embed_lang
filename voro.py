@@ -140,10 +140,7 @@ if __name__ == '__main__':
         if 'nlp' not in locals():
             nlp = spacy.load('en_core_web_lg')
         docs = [nlp(caption) for caption in captions]
-        emb = []
-        for doc in docs:
-            emb.append(sum([t.vector / t.vector_norm for t in doc]) / len(doc))
-        emb = np.array(emb, dtype=np.float32)
+        emb = np.array([doc.vector / doc.vector_norm for doc in docs], dtype=np.float32)
     elif MODEL.startswith('voyage'):
         import voyageai
         vo = voyageai.Client()
