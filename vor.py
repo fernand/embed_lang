@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import voyageai
-from PIL import Image, ImageCms, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont
 
 import api_config
 
@@ -11,8 +11,8 @@ import api_config
 
 MODEL = 'voyage-lite-02-instruct'
 N = 16
-MIN = -2
-MAX = 2
+MIN = -3
+MAX = 3
 
 def to_lab(colors):
     # Normalize the first channel to [0, 100]
@@ -135,6 +135,8 @@ if __name__ == '__main__':
     W = np.load('W_1024.npy').astype(np.float32)
 
     captions = [
+        'animal',
+        'animals',
         'bicycle',
         'bicycles',
         'He likes to ride his bicycle.',
