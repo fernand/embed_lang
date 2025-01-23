@@ -132,8 +132,6 @@ def create_image_grid_with_captions(rgb_images, captions, cols=4,
     return out_img
 
 if __name__ == '__main__':
-    W = np.load('W_1024.npy').astype(np.float32)
-
     captions = [
         'animal',
         'animals',
@@ -146,6 +144,7 @@ if __name__ == '__main__':
     vo = voyageai.Client(api_key=api_config.VOYAGE_API_KEY)
     emb = np.array(vo.embed(captions, model=MODEL).embeddings, dtype=np.float32)
 
+    W = np.load('W_1024.npy').astype(np.float32)
     proj = emb @ W
     points = proj[:, :2*N].reshape(len(emb), N, 2)
     colors = proj[:, 2*N:].reshape(len(emb), N, 3)
