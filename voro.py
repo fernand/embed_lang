@@ -134,13 +134,7 @@ def create_image_grid_with_captions(rgb_images, captions, cols=4,
     return out_img
 
 if __name__ == '__main__':
-    # captions, cols = captions.PLURALS_AND_MANY
-    captions, cols = ([
-        'I', 'me', 'myself',
-        'He', 'him', 'himself',
-        'I like', 'apples', 'I like apples',
-        'he likes', 'apples', 'he likes apples',
-    ], 3)
+    captions, cols = captions.APPLES
 
     if MODEL.startswith('voyage'):
         vo = voyageai.Client()

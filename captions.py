@@ -1,3 +1,10 @@
+APPLES = ([
+    'I', 'me', 'myself',
+    'He', 'him', 'himself',
+    'I like', 'apples', 'I like apples',
+    'he likes', 'apples', 'he likes apples',
+], 3)
+
 PLURALS = ([
     'animal',
     'animals',
@@ -9,7 +16,7 @@ PLURALS = ([
     'hands',
     'orange',
     'oranges',
-    ], 2)
+], 2)
 
 
 PLURALS_AND_MANY = ([
@@ -28,4 +35,4 @@ PLURALS_AND_MANY = ([
     'orange',
     'oranges',
     'many oranges',
-    ], 3)
+], 3)
