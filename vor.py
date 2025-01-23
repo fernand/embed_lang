@@ -14,6 +14,7 @@ import captions
 """
 
 MODEL, EMBED_DIM = 'voyage-lite-02-instruct', 1024
+# MODEL, EMBED_DIM = 'voyage-3-lite', 512
 # MODEL, EMBED_DIM = 'BAAI/bge-large-en-v1.5', 1024
 # MODEL, EMBED_DIM = 'Alibaba-NLP/gte-large-en-v1.5', 1024
 # MODEL, EMBED_DIM = 'Alibaba-NLP/gte-base-en-v1.5', 768
