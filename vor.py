@@ -4,9 +4,10 @@ import voyageai
 
 import api_config
 
+MODEL = 'voyage-lite-02-instruct'
 N = 16
-MIN = -5
-MAX = 5
+MIN = -2
+MAX = 2
 
 def to_lab(colors):
     # Normalize the first channel to [0, 100]
@@ -54,14 +55,18 @@ def voronoi_diagram(width, height, points, colors):
 
 if __name__ == '__main__':
     vo = voyageai.Client(api_key=api_config.VOYAGE_API_KEY)
-    # emb = vo.embed(['The dog chased the ball.', 'The cat chased the ball.'], model='voyage-large-2-instruct').embeddings
-    # np.save('emb.npy', emb)
     # W = np.random.randn(1024, 5 * 16)
     # np.save('W.npy', W)
-
-    # emb = np.load('emb.npy') # shape [2, 1024]
-    emb = np.array(vo.embed(['bicycle', 'He likes to ride his bicycle.', 'She likes to ride her bicycle.'], model='voyage-large-2-instruct').embeddings)
     W = np.load('W.npy') # shape [1024, (3 + 2) * N]
+
+    emb = np.array(
+        vo.embed([
+        'bicycle',
+        'He likes to ride his bicycle.',
+        'She likes to ride her bicycle.'
+        ],
+        model=MODEL).embeddings)
+
     proj = emb @ W
     points = proj[:, :2*N].reshape(len(emb), N, 2)
     colors = proj[:, 2*N:].reshape(len(emb), N, 3)
